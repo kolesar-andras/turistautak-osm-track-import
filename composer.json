@@ -1,0 +1,14 @@
+{
+    "name": "kolesar-andras/turistautak-osm-track-import",
+    "description": "turistautak.hu nyomvonalak áttöltése OSM-re",
+    "license": "GNU GPL",
+    "authors": [
+        {
+            "name": "Kolesár András",
+            "email": "kolesar@turistautak.hu"
+        }
+    ],
+    "require": {
+        "ulrichsg/getopt-php": "~2.2"
+    }
+}
