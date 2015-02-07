@@ -18,6 +18,7 @@ use Ulrichsg\Getopt\Getopt;
 use Ulrichsg\Getopt\Option;
 
 $getopt = new Getopt(array(
+    Option::create(null, 'id')->setDescription('numeric track id at turistautak.hu'),
     Option::create(null, 'userid')->setDescription('numeric user id at turistautak.hu'),
     Option::create(null, 'username')->setDescription('user name at turistautak.hu'),
     Option::create(null, 'osm-username')->setDescription('OSM username for upload'),
@@ -42,4 +43,3 @@ if (!$getopt->getOperands()
 	echo $getopt->getHelpText();
 	exit(1);
 }
-
