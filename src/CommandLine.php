@@ -18,17 +18,38 @@ class CommandLine {
 
 	function process () {
 		$getopt = new Getopt(array(
-			Option::create(null, 'id')->setDescription('numeric track id at turistautak.hu'),
-			Option::create(null, 'userid')->setDescription('numeric user id at turistautak.hu'),
-			Option::create(null, 'username')->setDescription('user name at turistautak.hu'),
-			Option::create(null, 'osm-username')->setDescription('OSM username for upload'),
-			Option::create(null, 'osm-password')->setDescription('OSM password for upload'),
-			Option::create(null, 'dev')->setDescription('use OSM development API'),
-			Option::create(null, 'merge')->setDescription('merge files into single gpx file'),
-			Option::create(null, 'merge-all')->setDescription('merge all processed files into a single gpx file'),
-			Option::create(null, 'merge-regions')->setDescription('find and merge parts from all regions'),
-			Option::create(null, 'crosstrack')->setDescription('set treshold for gpsbabel simplify crosstrack'),
-			Option::create('h', 'help')->setDescription('this help'),
+			Option::create(null, 'id', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('numeric track id at turistautak.hu'),
+
+			Option::create(null, 'userid', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('numeric user id at turistautak.hu'),
+
+			Option::create(null, 'username', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('user name at turistautak.hu'),
+
+			Option::create(null, 'osm-username', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('OSM username for upload'),
+
+			Option::create(null, 'osm-password', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('OSM password for upload'),
+
+			Option::create(null, 'dev', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('use OSM development API'),
+
+			Option::create(null, 'merge', Getopt::NO_ARGUMENT)
+				->setDescription('merge files into single gpx file'),
+
+			Option::create(null, 'merge-all', Getopt::NO_ARGUMENT)
+				->setDescription('merge all processed files into a single gpx file'),
+
+			Option::create(null, 'merge-regions', Getopt::NO_ARGUMENT)
+				->setDescription('find and merge parts from all regions'),
+
+			Option::create(null, 'crosstrack', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('set treshold for gpsbabel simplify crosstrack'),
+
+			Option::create('h', 'help')
+				->setDescription('this help'),
 		));
 
 		try {
