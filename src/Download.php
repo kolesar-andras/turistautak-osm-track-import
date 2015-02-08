@@ -13,19 +13,12 @@
 
 class Download extends Options {
 
-	function process () {
-		$id = $this->getopt['id'];
-		$url = sprintf('http://turistautak.hu/tracks.php?id=%d&json', $id);
-		$json = @file_get_contents($url);
-		if ($json === false)
-			throw new \Exception(sprintf('Failed to get information for track id=%d', $id));
-			
-		$data = json_decode($json, true);
+	function process ($id) {
+		if ($this->getopt['verbose'])
+			echo sprintf('Downloading track id=%d', $id), "\n";
 
-		if (!@$data['success'])
-			throw new \Exception(sprintf('Server reported error for id=%d: %s',
-				$id, @$data['message']));
-		
+		$url = sprintf('http://turistautak.hu/tracks.php?id=%d&json', $id);
+		$data = Query::fetchData($url);
 		$options = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 		$json = json_encode($data, $options);
 		$dir = sprintf('tracks/%d/', $data['id']);

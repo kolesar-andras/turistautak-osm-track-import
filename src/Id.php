@@ -1,7 +1,7 @@
 <?php namespace KolesarAndras\TuristautakOsmTrackImport;
 
 /**
- * parancssori paraméterek elérhetősége
+ * azonosítók letöltése
  *
  * @package kolesar-andras/turistautak-osm-track-import
  * @url https://github.com/kolesar-andras/turistautak-osm-track-import
@@ -11,22 +11,14 @@
  *
  */
 
-class Options {
+class Id extends Options {
 
-	var $getopt;
-
-	function __construct ($getopt) {
-		$this->getopt = $getopt;
+	function process ($id) {
+		$this->processIds($id);
 	}
 
 	function processIds ($ids) {
-		if (!is_array($ids)) {
-			$this->process($ids);
-		} else {
-			foreach ($ids as $id) {
-				$this->process($id);
-			}
-		}
+		if (!is_array($ids)) $ids = array($ids);
+		echo implode(', ', $ids), "\n";
 	}
-	
 }

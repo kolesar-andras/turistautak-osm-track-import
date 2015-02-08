@@ -24,6 +24,7 @@ class TaskManager extends Options {
 
 		$moreTasks = array(
 			'delete',
+			'id',
 		);
 
 		$allTasks = array_merge($defaultTasks, $moreTasks);
@@ -41,15 +42,26 @@ class TaskManager extends Options {
 				throw new \Exception(sprintf('Unknown task %s', $task));
 			}
 		}
+		
+		// lekérdezzük az azonosítókat
+		$query = new Query($this->getopt);
+		$ids = $query->process();
 
 		// kifejezetten csak értelmes sorrendben vagyunk hajlandóak végrehajtani
-		foreach ($allTasks as $task) {
-			if (in_array($task, $tasks)) {
-				$className = __NAMESPACE__ . '\\' . ucfirst($task);
-				if (!class_exists($className))
-					throw new \Exception(sprintf('Not implemented: %s', $task));
-				$taskObject = new $className($this->getopt);
-				$taskObject->process();
+		if ($this->getopt['one-by-one']) {
+			$todo = $ids;
+		} else {
+			$todo = array($ids);
+		}
+		foreach ($todo as $ids) {
+			foreach ($allTasks as $task) {
+				if (in_array($task, $tasks)) {
+					$className = __NAMESPACE__ . '\\' . ucfirst($task);
+					if (!class_exists($className))
+						throw new \Exception(sprintf('Not implemented: %s', $task));
+					$taskObject = new $className($this->getopt);
+					$taskObject->processIds($ids);
+				}
 			}
 		}
 	}
