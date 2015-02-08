@@ -31,11 +31,20 @@ class Storage {
 		if ($ret === false)
 			throw new \Exception(sprintf('Failed to create file: %s', $path));
 	}
+
+	function delete ($filename) {
+		$dir = $this->dir();
+		$path = $dir . $filename;
+		if (!file_exists($path)) return null;
+		$ret = @unlink($path);
+		if ($ret === false)
+			throw new \Exception(sprintf('Failed to delete file: %s', $path));
+	}
 	
 	function touch ($filename, $timestamp) {
 		$dir = $this->dir();
 		$path = $dir . $filename;
-		$ret = touch($filename, $timestamp);
+		$ret = touch($path, $timestamp);
 		if ($ret === false)
 		throw new \Exception(sprintf('Failed to set date for file: %s', $path));
 	}

@@ -23,8 +23,7 @@ class Download extends Task {
 		$storage->putData('turistautak', $data);
 		
 		if (is_array($data['files'])) foreach ($data['files'] as $file) {
-			if (!preg_match('/\\.(gdb|mps|plt|wpt|gpx)$/', $file['name']))
-				continue;
+			if (!Format::isTrackFile($file['name'])) continue;
 
 			$contents = @file_get_contents($file['url']);
 			if ($contents === false)
