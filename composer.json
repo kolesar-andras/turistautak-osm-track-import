@@ -10,5 +10,8 @@
     ],
     "require": {
         "ulrichsg/getopt-php": "~2.2"
-    }
+    },
+	"autoload": {
+		"psr-4": {"KolesarAndras\\TuristautakOsmTrackImport\\": "src"}
+	}
 }

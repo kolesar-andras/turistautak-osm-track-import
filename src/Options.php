@@ -1,7 +1,7 @@
 <?php namespace KolesarAndras\TuristautakOsmTrackImport;
 
 /**
- * turistautak.hu nyomvonalak áttöltése OSM-re
+ * parancssori paraméterek elérhetősége
  *
  * @package kolesar-andras/turistautak-osm-track-import
  * @url https://github.com/kolesar-andras/turistautak-osm-track-import
@@ -11,13 +11,12 @@
  *
  */
 
-require_once __DIR__.'/vendor/autoload.php';
+class Options {
 
-try {
-	$commandLine = new CommandLine();
-	$commandLine->process();
+	var $getopt;
 
-} catch (\Exception $e) {
-	echo $e->getMessage(), "\n";
-
+	function __construct ($getopt) {
+		$this->getopt = $getopt;
+	}
+	
 }
