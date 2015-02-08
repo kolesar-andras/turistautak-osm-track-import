@@ -11,7 +11,7 @@
  *
  */
  
-class TaskManager extends Options {
+class TaskManager {
 
 	function process () {
 		$defaultTasks = array(
@@ -30,10 +30,10 @@ class TaskManager extends Options {
 		$allTasks = array_merge($defaultTasks, $moreTasks);
 
 		// ha nem ad meg paracsot, akkor az összeset végrehajtjuk
-		if (!$this->getopt->getOperands()) {
+		if (!Options::all()->getOperands()) {
 			$tasks = $defaultTasks;
 		} else {
-			$tasks = $this->getopt->getOperands();
+			$tasks = Options::all()->getOperands();
 		}
 
 		// megnézzük, nincs-e köztük olyan, amit nem ismerünk
@@ -44,11 +44,11 @@ class TaskManager extends Options {
 		}
 		
 		// lekérdezzük az azonosítókat
-		$query = new Query($this->getopt);
+		$query = new Query;
 		$ids = $query->process();
 
 		// kifejezetten csak értelmes sorrendben vagyunk hajlandóak végrehajtani
-		if ($this->getopt['one-by-one']) {
+		if (Options::get('one-by-one')) {
 			$todo = $ids;
 		} else {
 			$todo = array($ids);
@@ -59,7 +59,7 @@ class TaskManager extends Options {
 					$className = __NAMESPACE__ . '\\' . ucfirst($task);
 					if (!class_exists($className))
 						throw new \Exception(sprintf('Not implemented: %s', $task));
-					$taskObject = new $className($this->getopt);
+					$taskObject = new $className;
 					$taskObject->processIds($ids);
 				}
 			}

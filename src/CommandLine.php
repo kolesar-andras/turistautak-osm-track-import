@@ -57,6 +57,8 @@ class CommandLine {
 			Option::create('h', 'help')
 				->setDescription('this help'),
 		));
+		
+		Options::init($getopt);
 
 		try {
 			$getopt->parse();
@@ -71,7 +73,7 @@ class CommandLine {
 			exit(1);
 		}
 
-		$taskManager = new TaskManager($getopt);
+		$taskManager = new TaskManager;
 		$taskManager->process();
 	
 	}

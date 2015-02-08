@@ -11,24 +11,14 @@
  *
  */
 
-class Options {
+class Convert extends Task {
 
-	static $getopt;
+	function process ($id) {
+		if (Options::get('verbose'))
+			echo sprintf('Converting track id=%d', $id), "\n";
 
-	function init ($getopt) {
-		self::$getopt = $getopt;
+		$storage = new Storage($id);
+		$data = $storage->getData('turistautak');
+		var_dump($data);
 	}
-	
-	function all () {
-		return self::$getopt;
-	}
-	
-	function exists ($option) {
-		return isset(self::$getopt[$option]);
-	}
-
-	function get ($option) {
-		return self::$getopt[$option];
-	}
-		
 }

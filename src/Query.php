@@ -16,11 +16,11 @@ class Query extends Options {
 	function process () {
 		$params = array();
 
-		if (isset($this->getopt['userid'])) {
-			if (!is_numeric($this->getopt['userid'])
-				|| $this->getopt['userid'] <= 0)
-				throw new \Exception(sprintf('Invalid userid: %s', $this->getopt['userid']));
-			$params['owner'] = $this->getopt['userid'];
+		if (Options::exists('userid')) {
+			if (!is_numeric(Options::get('userid'))
+				|| Options::get('userid') <= 0)
+				throw new \Exception(sprintf('Invalid userid: %s', Options::get('userid')));
+			$params['owner'] = Options::get('userid');
 		}
 		
 		if (count($params)) {		
@@ -33,8 +33,8 @@ class Query extends Options {
 				throw new \Exception(sprintf('Failed to get ids from url: %s', $url));
 			return $data['ids'];
 
-		} else if ($this->getopt['id']) {
-			return array($this->getopt['id']);
+		} else if (Options::get('id')) {
+			return array(Options::get('id'));
 
 		}
 	}
@@ -45,7 +45,6 @@ class Query extends Options {
 			throw new \Exception(sprintf('Failed to fetch url: ', $url));
 			
 		$data = json_decode($json, true);
-		if (!@$data['success']) var_dump($url, $data);
 
 		if (!@$data['success'])
 			throw new \Exception(sprintf('Server reported error for request %s: %s',
