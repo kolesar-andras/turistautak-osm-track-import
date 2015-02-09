@@ -36,3 +36,35 @@ Kapcsolódó címek:
 * [turistautak-osm-api](https://github.com/kolesar-andras/turistautak-osm-api)
 * [turistautak.hu osm fórum](http://turistautak.hu/forum.php?id=osm)
 
+### Telepítés
+
+A program egy része már használható, a [parancssorban kiválasztható feladatok](https://github.com/kolesar-andras/turistautak-osm-track-import/issues/11) közül működik a download, convert és a compare.
+
+Add ki az alábbi parancsokat. Készít magának alkönyvtárat turistautak-osm-track-import néven.
+
+	git clone https://github.com/kolesar-andras/turistautak-osm-track-import.git
+	
+Ha nem lenne git a gépeden, Debian alapú Linuxon (például Ubuntun) így tudod telepíteni:
+	
+	sudo apt-get install git
+	
+Ha ez valamiért nem megy, nem szükséges git, [letöltheted .zip fájlként](https://github.com/kolesar-andras/turistautak-osm-track-import/archive/master.zip) is.
+
+A program futásához szükség van külső összetevőkre, amelyeket a Composer nevű PHP csomagkezelő intéz. Amíg ez nincs meg, a program kiírja hogy mire van szüksége:
+
+	Setup incomplete, please run the following command:
+
+	composer update
+
+	If you do not have composer, run this command to get it:
+
+	php -r "readfile('https://getcomposer.org/installer');" | php
+
+	This installs itself as composer.phar in the current directory, then call this way:
+
+	php composer.phar update
+
+Ezután már hívható az alábbi formában:
+
+	php track.php
+
