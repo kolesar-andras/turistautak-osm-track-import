@@ -64,7 +64,28 @@ A program futásához szükség van külső összetevőkre, amelyeket a Composer
 
 	php composer.phar update
 
+Ha nincs parancssoros php a gépeden, telepítsd:
+
+	sudo apt-get install php5-cli
+
 Ezután már hívható az alábbi formában:
 
-	php track.php
+	php track.php	
+	
+### Haladóknak
 
+Készítettem hozzá symlinket track néven, így Linuxon még rövidebb:
+
+	php track
+	
+Vagy másképp:
+
+	./track
+	
+Hasonló szimbolikus link elhelyezhető valahol a rendszer elérési útjában, például így:
+
+	sudo ln -s `pwd`/track.php /usr/local/bin/track
+	
+Így a lehető legrövidebb paranccsal hívható:
+
+	track
