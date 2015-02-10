@@ -30,12 +30,12 @@ class Convert extends Task {
 				escapeshellarg($dir . $file['name'] . '.gpx'));
 			$output = shell_exec($cmd);
 			if ($output != '') {
-				$storage->put('cgpsmapper.log', $output);
+				$storage->put('gpsbabel.log', $output);
 				echo $cmd, "\n";
 				echo $output;
-				throw new \Exception('cgpsmapper printed errors');
+				throw new \Exception('gpsbabel printed errors');
 			} else {
-				$storage->delete('cgpsmapper.log');
+				$storage->delete('gpsbabel.log');
 			}
 		}
 	}
