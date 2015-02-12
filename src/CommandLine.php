@@ -57,6 +57,9 @@ class CommandLine {
 			Option::create('v', 'verbose', Getopt::NO_ARGUMENT)
 				->setDescription('verbose output'),
 
+			Option::create('d', 'debug', Getopt::NO_ARGUMENT)
+				->setDescription('debug output'),
+
 			Option::create('h', 'help')
 				->setDescription('this help'),
 		));

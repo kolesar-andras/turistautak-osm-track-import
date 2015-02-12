@@ -14,7 +14,7 @@
 class Compare extends Task {
 
 	const API = 'http://api.openstreetmap.org/api/0.6';
-	const PRECISION = 5; // ennyi tizedesre számoljuk a befoglalót
+	const PRECISION = 4; // ennyi tizedesre számoljuk a befoglalót
 	const SAMPLES = 3; // ennyi mintát veszünk a nyomvonalból
 	const MARGIN = 0.05; // ekkora részét nem vizsgáljuk a nyomvonalnak
 	const OSMDIGITS = 7; // ennyi tizedesig tárol az OSM pontot
@@ -79,9 +79,12 @@ class Compare extends Task {
 				$gpxfile = Query::fetchUrl($url);
 				if ($gpxfile === false)
 					throw new \Exception('Could not get trackpoints from OSM');
-					
-				$storage->put('match.gpx', $gpxfile);
-
+				
+				if (Options::get('debug')) {	
+					$filename = sprintf('%s.lookup.%s.gpx', $file['name'], $count+1);
+					$storage->put($filename, $gpxfile);
+				}
+				
 				$osm = simplexml_load_string($gpxfile);
 				foreach ($osm->trk as $trk) {
 				foreach ($trk->trkseg as $trkseg) {
@@ -109,6 +112,9 @@ class Compare extends Task {
 				}
 				$count++;
 				if (count($matches)) break;
+				if (Options::get('debug')) {
+					echo sprintf('Missing point %1.7f %1.7f %s', $point['lat'], $point['lon'], $point->time), "\n";
+				}		
 			}
 			$warning = '';
 			if (count($matches)>1) $warning = sprintf(', duplicates on OSM: %s', implode(', ', array_keys($matches)));
@@ -118,8 +124,8 @@ class Compare extends Task {
 	
 	function samePoint ($point1, $point2) {
 		return
-			$this->sameTime($point1, $point2) &&
-			$this->samePosition($point1, $point2);
+			self::sameTime($point1, $point2) &&
+			self::samePosition($point1, $point2);
 	}
 	
 	function sameTime ($point1, $point2) {
@@ -128,15 +134,15 @@ class Compare extends Task {
 
 	function samePosition ($point1, $point2) {
 		return (
-			$this->osmDigits($point1['lat']) == 
-			$this->osmDigits($point1['lat']) &&
-			$this->osmDigits($point1['lon']) == 
-			$this->osmDigits($point1['lon'])
-		);			
+			self::osmDigits($point1['lat']) == 
+			self::osmDigits($point2['lat']) &&
+			self::osmDigits($point1['lon']) == 
+			self::osmDigits($point2['lon'])
+		);
 	}
 
 	function osmDigits ($coord) {
-		$format = sprintf('%%1.%df', self::OSMDIGITS);
+		$format = substr(sprintf('%%1.%df', self::OSMDIGITS+1), 0, -1);
 		return sprintf($format, $coord);
 	}
 	
