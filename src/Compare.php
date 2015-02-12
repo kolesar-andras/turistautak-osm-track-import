@@ -14,7 +14,7 @@
 class Compare extends Task {
 
 	const API = 'http://api.openstreetmap.org/api/0.6';
-	const PRECISION = 4; // ennyi tizedesre számoljuk a befoglalót
+	const PRECISION = 5; // ennyi tizedesre számoljuk a befoglalót
 	const SAMPLES = 3; // ennyi mintát veszünk a nyomvonalból
 	const MARGIN = 0.05; // ekkora részét nem vizsgáljuk a nyomvonalnak
 	const OSMDIGITS = 7; // ennyi tizedesig tárol az OSM pontot
@@ -47,7 +47,7 @@ class Compare extends Task {
 					foreach ($trkseg->trkpt as $trkpt)
 						$count++;
 
-			$start = $count * self::MARGIN;
+			$start = (int) floor($count * self::MARGIN);
 			$range = (int) floor($count - $start*2);
 			$steps = (int) floor($range / (self::SAMPLES-1));
 			$i = 0;
@@ -56,7 +56,7 @@ class Compare extends Task {
 				foreach ($trk->trkseg as $trkseg)
 					foreach ($trkseg->trkpt as $trkpt)
 						if (($i++-$start) % $steps == 0) $points[$i] = $trkpt;
-			
+						
 			$power = pow(10, self::PRECISION);
 			$format = sprintf('%%1.%1$df,%%1.%1$df,%%1.%1$df,%%1.%1$df',
 				self::PRECISION);
@@ -79,32 +79,39 @@ class Compare extends Task {
 				$gpxfile = Query::fetchUrl($url);
 				if ($gpxfile === false)
 					throw new \Exception('Could not get trackpoints from OSM');
+					
+				$storage->put('match.gpx', $gpxfile);
 
 				$osm = simplexml_load_string($gpxfile);
-				$hasSame = 0;
 				foreach ($osm->trk as $trk) {
 				foreach ($trk->trkseg as $trkseg) {
 				foreach ($trkseg->trkpt as $trkpt) {
 					
-					if ($this->samePoint($point, $trkpt)) $hasSame++;
-					$osmlat = (float) $trkpt['lat'];
-					$osmlon = (float) $trkpt['lon'];
+					if ($this->samePoint($point, $trkpt)) {
+						$same++;
+
+						if (!preg_match('#/([0-9]+)$#', $trk->url, $regs)) 
+							throw new \Exception(sprintf('Invalid osm url: %s', $trk->url));
+							
+						$osmid = $regs[1];
 					
-					$match = array(
-						'gpx' => $point,
-						'osm' => $trkpt,
-					);
+						$match = array(
+							'point' => $point,
+							'trkpt' => $trkpt,
+							'trkseg' => $trkseg,
+							'trk' => $trk,
+						);
 					
-					$matches[] = $match;
+						$matches[$osmid] = $match;
+					}
 				}
 				}
 				}
-				if ($hasSame) $same++;
-				if ($hasSame > 1) $duplicate++;
 				$count++;
+				if (count($matches)) break;
 			}
 			$warning = '';
-			if ($duplicate) $warning = sprintf(' %d duplicates on OSM', $duplicate);
+			if (count($matches)>1) $warning = sprintf(', duplicates on OSM: %s', implode(', ', array_keys($matches)));
 			if (Options::get('verbose')) echo sprintf('%d same from %d points%s [%s]', $same, $count, $warning, $file['name']), "\n";
 		}
 	}
