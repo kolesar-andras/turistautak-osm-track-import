@@ -22,6 +22,13 @@ class Query {
 				throw new \Exception(sprintf('Invalid userid: %s', Options::get('userid')));
 			$params['owner'] = Options::get('userid');
 		}
+
+		if (Options::exists('username')) {
+			// a turistautak.hu ISO-8859-2-ben várja
+			// feltételezzük, hogy a felhasználó UTF-8 kódolásban adta meg
+			// ha mégsem, akkor megadhatja ékezet nélkül is, úgy is működik
+			$params['member'] = iconv('UTF-8', 'ISO-8859-2', Options::get('username'));
+		}
 		
 		if (count($params)) {		
 			$query = http_build_query($params);
