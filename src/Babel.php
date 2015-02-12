@@ -20,11 +20,10 @@ class Babel {
 
 		$storage = new Storage($id);
 		$dir = $storage->dir();
-		$cmd = sprintf('gpsbabel -i %s -f %s -o gpx -F %s %s 2>&1',
+		$cmd = sprintf('gpsbabel -i %s -f %s %s -o gpx -F %s 2>&1',
 			escapeshellarg($format),
-			escapeshellarg($dir . $in),
-			escapeshellarg($dir . $out),
-			$args);
+			escapeshellarg($dir . $in), $args,
+			escapeshellarg($dir . $out));
 
 		$output = shell_exec($cmd);
 		

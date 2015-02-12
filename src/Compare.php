@@ -18,6 +18,7 @@ class Compare extends Task {
 	const SAMPLES = 3; // ennyi mintát veszünk a nyomvonalból
 	const MARGIN = 0.05; // ekkora részét nem vizsgáljuk a nyomvonalnak
 	const OSMDIGITS = 7; // ennyi tizedesig tárol az OSM pontot
+	const FILTER = '-x simplify,crosstrack,error=0.0020k'; // ezzel szűrjük az állományt az összehasonításhoz
 
 	function process ($id) {
 		if (Options::get('verbose'))
@@ -26,9 +27,14 @@ class Compare extends Task {
 		$storage = new Storage($id);
 		$data = $storage->getData('turistautak');
 		foreach ($data['files'] as $file) {
+			// egyszerűsítjük a nyomvonalat, hogy lehetőleg olyan pontot vizsgáljunk,
+			// amit nem szűrtek ki hasonló módszerrel a feltöltés előtt
+			// egyúttal kisebb xml-t kell végignéznünk
+			Babel::process($id, $file['name'] . '.gpx', $file['name'] . '.compare.gpx', self::FILTER);
+		
 			// a gpsbabel leszedi a Garmin MapSource által használt kiterjesztések névtér-hivatkozását
 			// amit viszont a simplexml hiányol, ezért pótoljuk röptében
-			$content = $storage->get($file['name'] . '.gpx');
+			$content = $storage->get($file['name'] . '.compare.gpx');
 			$content = preg_replace(
 				'/<gpxx:([a-z]+)Extension/i',
 				'<gpxx:\1Extension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">',
