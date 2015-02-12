@@ -25,10 +25,15 @@ class Compare extends Task {
 
 		$storage = new Storage($id);
 		$data = $storage->getData('turistautak');
-		$dir = $storage->dir();
 		foreach ($data['files'] as $file) {
-			$filename = $dir . $file['name'] . '.gpx';
-			$gpx = @simplexml_load_file($filename);
+			// a gpsbabel leszedi a Garmin MapSource által használt kiterjesztések névtér-hivatkozását
+			// amit viszont a simplexml hiányol, ezért pótoljuk röptében
+			$content = $storage->get($file['name'] . '.gpx');
+			$content = preg_replace(
+				'/<gpxx:([a-z]+)Extension/i',
+				'<gpxx:\1Extension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">',
+				$content);
+			$gpx = simplexml_load_string($content);
 
 			$count = 0;
 			foreach ($gpx->trk as $trk)
