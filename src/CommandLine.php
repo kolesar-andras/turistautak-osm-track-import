@@ -36,6 +36,9 @@ class CommandLine {
 			Option::create(null, 'dev', Getopt::OPTIONAL_ARGUMENT)
 				->setDescription('use OSM development API'),
 
+			Option::create(null, 'proxy', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('http proxy'),
+
 			Option::create(null, 'merge', Getopt::NO_ARGUMENT)
 				->setDescription('merge files into single gpx file'),
 

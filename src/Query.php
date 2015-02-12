@@ -11,7 +11,7 @@
  *
  */
 
-class Query extends Options {
+class Query {
 
 	function process () {
 		$params = array();
@@ -40,9 +40,9 @@ class Query extends Options {
 	}
 
 	static function fetchData ($url) {
-		$json = @file_get_contents($url);
+		$json = self::fetchUrl($url);
 		if ($json === false)
-			throw new \Exception(sprintf('Failed to fetch url: ', $url));
+			throw new \Exception(sprintf('Failed to fetch url: %s', $url));
 			
 		$data = json_decode($json, true);
 
@@ -51,5 +51,19 @@ class Query extends Options {
 				$url, @$data['message']));
 
 		return($data);
+	}
+	
+	static function fetchUrl ($url) {
+		$context = null;
+		if (Options::get('proxy') != '') {
+			$settings = array(
+				'http' => array(
+					'proxy' => Options::get('proxy'),
+					'request_fulluri' => true,
+				),
+			);
+			$context = stream_context_create($settings);
+		}
+		return @file_get_contents($url, false, $context);
 	}
 }

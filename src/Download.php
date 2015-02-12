@@ -25,7 +25,7 @@ class Download extends Task {
 		if (is_array($data['files'])) foreach ($data['files'] as $file) {
 			if (!Format::isTrackFile($file['name'])) continue;
 
-			$contents = @file_get_contents($file['url']);
+			$contents = Query::fetchUrl($file['url']);
 			if ($contents === false)
 			throw new \Exception(sprintf('Failed to get file for track id=%d: ', $id, $file['name']));
 			

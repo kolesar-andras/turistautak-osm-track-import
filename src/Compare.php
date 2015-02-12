@@ -28,7 +28,7 @@ class Compare extends Task {
 		$dir = $storage->dir();
 		foreach ($data['files'] as $file) {
 			$filename = $dir . $file['name'] . '.gpx';
-			$gpx = simplexml_load_file($filename);
+			$gpx = @simplexml_load_file($filename);
 
 			$count = 0;
 			foreach ($gpx->trk as $trk)
@@ -53,6 +53,7 @@ class Compare extends Task {
 			$matches = array();
 			$same = 0;
 			$count = 0;
+			$duplicate = 0;
 			foreach ($points as $point) {
 				$lat = (float) $point['lat'];
 				$lon = (float) $point['lon'];
@@ -64,16 +65,17 @@ class Compare extends Task {
 					(floor($lat * $power)+1)/$power);
 				
 				$url = self::API . sprintf('/trackpoints?bbox=%s&page=0', $bbox);
-				$gpxfile = @file_get_contents($url);
+				$gpxfile = Query::fetchUrl($url);
 				if ($gpxfile === false)
 					throw new \Exception('Could not get trackpoints from OSM');
 
 				$osm = simplexml_load_string($gpxfile);
+				$hasSame = 0;
 				foreach ($osm->trk as $trk) {
 				foreach ($trk->trkseg as $trkseg) {
 				foreach ($trkseg->trkpt as $trkpt) {
 					
-					if ($this->samePoint($point, $trkpt)) $same++;
+					if ($this->samePoint($point, $trkpt)) $hasSame++;
 					$osmlat = (float) $trkpt['lat'];
 					$osmlon = (float) $trkpt['lon'];
 					
@@ -86,9 +88,13 @@ class Compare extends Task {
 				}
 				}
 				}
+				if ($hasSame) $same++;
+				if ($hasSame > 1) $duplicate++;
 				$count++;
 			}
-			if (Options::get('verbose')) echo sprintf('%d same from %d points [%s]', $same, $count, $file['name']), "\n";
+			$warning = '';
+			if ($duplicate) $warning = sprintf(' %d duplicates on OSM', $duplicate);
+			if (Options::get('verbose')) echo sprintf('%d same from %d points%s [%s]', $same, $count, $warning, $file['name']), "\n";
 		}
 	}
 	
