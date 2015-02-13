@@ -141,9 +141,9 @@ class Compare extends Task {
 		);
 	}
 
-	function osmDigits ($coord) {
-		$format = substr(sprintf('%%1.%df', self::OSMDIGITS+1), 0, -1);
-		return sprintf($format, $coord);
+	static function osmDigits ($coord) {
+		$format = sprintf('%%1.%df', self::OSMDIGITS+1);
+		return substr(sprintf($format, $coord), 0, -1);
 	}
 	
 }

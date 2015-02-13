@@ -2,6 +2,10 @@
 
 class ConcatTest extends \PHPUnit_Framework_TestCase {
 
+	function testDigits () {
+		$this->assertEquals('47.1234567', Compare::osmDigits(47.12345678));
+	}
+
 	function testSamePoint () {
 		
 		$point1 = new \SimpleXMLElement('<trkpt lat="47.12345678" lon="19.87654321" />');
