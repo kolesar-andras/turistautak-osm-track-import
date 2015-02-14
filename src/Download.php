@@ -32,8 +32,8 @@ class Download extends Task {
 			if (md5($contents) != $file['md5'])
 				throw new \Exception('md5 error: ' . $file['name']);
 
-			$storage->put($file['name'], $contents);
-			$storage->touch($file['name'], strtotime($file['date']));
+			$storage->put(Storage::DIR_SRC . $file['name'], $contents);
+			$storage->touch(Storage::DIR_SRC . $file['name'], strtotime($file['date']));
 		}
 	}
 }

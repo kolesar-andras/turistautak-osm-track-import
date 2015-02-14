@@ -30,11 +30,15 @@ class Compare extends Task {
 			// egyszerűsítjük a nyomvonalat, hogy lehetőleg olyan pontot vizsgáljunk,
 			// amit nem szűrtek ki hasonló módszerrel a feltöltés előtt
 			// egyúttal kisebb xml-t kell végignéznünk
-			Babel::process($id, $file['name'] . '.gpx', $file['name'] . '.compare.gpx', self::FILTER);
+			Babel::process($id, 
+				Storage::DIR_GPX . $file['name'] . '.gpx',
+				Storage::DIR_CMP . $file['name'] . '.gpx',
+				self::FILTER
+			);
 		
 			// a gpsbabel leszedi a Garmin MapSource által használt kiterjesztések névtér-hivatkozását
 			// amit viszont a simplexml hiányol, ezért pótoljuk röptében
-			$content = $storage->get($file['name'] . '.compare.gpx');
+			$content = $storage->get(Storage::DIR_CMP . $file['name'] . '.gpx');
 			$content = preg_replace(
 				'/<gpxx:([a-z]+)Extension/i',
 				'<gpxx:\1Extension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">',
@@ -82,7 +86,7 @@ class Compare extends Task {
 				
 				if (Options::get('debug')) {	
 					$filename = sprintf('%s.lookup.%s.gpx', $file['name'], $count+1);
-					$storage->put($filename, $gpxfile);
+					$storage->put(Storage::DIR_CMP . $filename, $gpxfile);
 				}
 				
 				$osm = simplexml_load_string($gpxfile);

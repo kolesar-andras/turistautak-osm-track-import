@@ -20,7 +20,10 @@ class Convert extends Task {
 		$storage = new Storage($id);
 		$data = $storage->getData('turistautak');
 		foreach ($data['files'] as $file) {
-			Babel::process($id, $file['name'], $file['name'] . '.gpx');
+			Babel::process($id,
+				Storage::DIR_SRC . $file['name'],
+				Storage::DIR_GPX . $file['name'] . '.gpx'
+			);
 		}
 	}
 }

@@ -14,6 +14,11 @@
 class Storage {
 
 	var $id;
+	
+	const DIR_SRC = 'turistautak/';
+	const DIR_GPX = 'gpx/';
+	const DIR_CMP = 'compare/';
+	const DIR_OSM = 'osm/';	
 
 	function __construct ($id) {
 		$this->id = $id;
@@ -23,10 +28,14 @@ class Storage {
 		return sprintf('tracks/%d/', $this->id);
 	}
 
-	function put ($filename, $contents) {
-		$dir = $this->dir();
+	function mkdirname ($filename) {
+		$dir = $this->dir() . dirname($filename);
 		@mkdir($dir, 0755, true);
-		$path = $dir . $filename;
+	}
+
+	function put ($filename, $contents) {
+		$this->mkdirname($filename);
+		$path = $this->dir() . $filename;
 		$ret = @file_put_contents($path, $contents);
 		if ($ret === false)
 			throw new \Exception(sprintf('Failed to create file: %s', $path));

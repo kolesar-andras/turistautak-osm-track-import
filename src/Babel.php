@@ -20,6 +20,7 @@ class Babel {
 
 		$storage = new Storage($id);
 		$dir = $storage->dir();
+		$storage->mkdirname($out);
 		$cmd = sprintf('gpsbabel -i %s -f %s %s -o gpx -F %s 2>&1',
 			escapeshellarg($format),
 			escapeshellarg($dir . $in), $args,
@@ -27,13 +28,14 @@ class Babel {
 
 		$output = shell_exec($cmd);
 		
+		$logfilename = $out . '.log';
 		if ($output != '') {
-			$storage->put('gpsbabel.log', $output);
+			$storage->put($logfilename, $output);
 			echo $cmd, "\n";
 			echo $output;
 			throw new \Exception('gpsbabel printed errors');
 		} else {
-			$storage->delete('gpsbabel.log');
+			$storage->delete($logfilename);
 		}
 	}
 }
