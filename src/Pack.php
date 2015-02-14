@@ -1,7 +1,7 @@
 <?php namespace KolesarAndras\TuristautakOsmTrackImport;
 
 /**
- * nyomvonalak feltöltése
+ * nyomvonalak öszeállítása feltöltésre
  *
  * @package kolesar-andras/turistautak-osm-track-import
  * @url https://github.com/kolesar-andras/turistautak-osm-track-import
@@ -11,11 +11,11 @@
  *
  */
 
-class Upload extends Task {
+class Pack extends Task {
 
 	function process ($id) {
 		if (Options::get('verbose'))
-			echo sprintf('Uploading track id=%d', $id), "\n";
+			echo sprintf('Packing track id=%d', $id), "\n";
 
 		$storage = new Storage($id);
 		$data = $storage->getData('turistautak');

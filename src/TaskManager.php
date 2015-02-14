@@ -20,6 +20,7 @@ class TaskManager {
 			'convert',
 			'compare',
 			'simplify',
+			'pack',
 			'upload',
 		);
 
