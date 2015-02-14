@@ -16,6 +16,7 @@ class TaskManager {
 	function process () {
 		$defaultTasks = array(
 			'download',
+			'tag',
 			'convert',
 			'compare',
 			'simplify',

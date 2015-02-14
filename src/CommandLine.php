@@ -33,6 +33,18 @@ class CommandLine {
 			Option::create(null, 'osm-password', Getopt::OPTIONAL_ARGUMENT)
 				->setDescription('OSM password for upload'),
 
+			Option::create(null, 'visibility', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('visibility of uploaded data [public]')
+				->setDefaultValue('public')
+				->setValidation(function($value){
+					return in_array($value, [
+						'private',
+						'public',
+						'trackable',
+						'identifiable'
+					]);
+				}),
+
 			Option::create(null, 'dev', Getopt::OPTIONAL_ARGUMENT)
 				->setDescription('use OSM development API'),
 
@@ -72,9 +84,7 @@ class CommandLine {
 			throw new \Exception($e->getMessage());
 		}
 
-		if (!$getopt->getOperands()
-			&& !$getopt->getOptions()
-			|| $getopt['help']) {
+		if ($GLOBALS['argc']<=1 || $getopt['help']) {
 			echo $getopt->getHelpText();
 			exit(1);
 		}

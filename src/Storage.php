@@ -79,7 +79,7 @@ class Storage {
 	}
 	
 	function dataFileName($name) {
-		return '.' . $name . '.json';
+		return $name . '.json';
 	}
 	
 }
