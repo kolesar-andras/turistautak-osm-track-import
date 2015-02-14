@@ -18,7 +18,8 @@ class Storage {
 	const DIR_SRC = 'turistautak/';
 	const DIR_GPX = 'gpx/';
 	const DIR_CMP = 'compare/';
-	const DIR_OSM = 'osm/';	
+	const DIR_OSM = 'osm/';
+	const DIR_UPL = 'upload/';
 
 	function __construct ($id) {
 		$this->id = $id;
@@ -80,6 +81,25 @@ class Storage {
 	
 	function dataFileName($name) {
 		return $name . '.json';
+	}
+	
+	function gzip ($in, $out = null) {
+		if ($out === null) $out = $in . '.gz';
+		$content = $this->get($in);
+		$gzip = gzencode($content);
+		$this->put($out, $gzip);
+	}
+	
+	function zip ($archive, $files, $delete = false) {
+		$this->mkdirname($archive);
+		$zip = new \ZipArchive;
+		$zip->open($this->dir() . $archive, \ZipArchive::CREATE);
+		foreach ($files as $file) {
+			$ret = $zip->addFile($this->dir() . $file, basename($file));
+			if (!$ret) throw new \Exception('failed to add file to zip');
+			if ($delete) $this->delete($file);
+		}
+		$zip->close();
 	}
 	
 }

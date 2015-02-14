@@ -14,16 +14,22 @@
 class Babel {
 
 	function process ($id, $in, $out, $args=null) {
-		$format = Format::formatForFilename($in);
+		if (!is_array($in)) $in = [$in];
+		$format = Format::formatForFilename($in[0]);
 		if ($format == '')
-			throw new \Exception('Unknown format for file: ' . $in);
+			throw new \Exception('Unknown format for file: ' . $in[0]);
 
 		$storage = new Storage($id);
 		$dir = $storage->dir();
 		$storage->mkdirname($out);
+		$infiles = [];
+		foreach ($in as $file) {
+			$infiles[] = escapeshellarg($dir . $file);
+		}
 		$cmd = sprintf('gpsbabel -i %s -f %s %s -o gpx -F %s 2>&1',
 			escapeshellarg($format),
-			escapeshellarg($dir . $in), $args,
+			implode(' -f ', $infiles),
+			$args,
 			escapeshellarg($dir . $out));
 
 		$output = shell_exec($cmd);
