@@ -61,7 +61,7 @@ class CommandLine {
 				->setDescription('find and merge parts from all regions'),
 
 			Option::create(null, 'crosstrack', Getopt::OPTIONAL_ARGUMENT)
-				->setDescription('set treshold for gpsbabel simplify crosstrack'),
+				->setDescription('set threshold for gpsbabel simplify crosstrack'),
 
 			Option::create('1', 'one-by-one', Getopt::NO_ARGUMENT)
 				->setDescription('process tracks one by one'),

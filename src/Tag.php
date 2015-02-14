@@ -1,13 +1,13 @@
 <?php namespace KolesarAndras\TuristautakOsmTrackImport;
 
 /**
- * nyomvonalak átalakítása
+ * nyomvonalak címkézése osm-re
  *
  * @package kolesar-andras/turistautak-osm-track-import
  * @url https://github.com/kolesar-andras/turistautak-osm-track-import
  *
  * @author Kolesár András <kolesar@turistautak.hu>
- * @since 2015.02.07
+ * @since 2015.02.14
  *
  */
 
@@ -34,6 +34,7 @@ class Tag extends Task {
 		$osm = [];
 		$osm['description'] = $this->data['name'];
 		$osm['visibility'] = Options::get('visibility');
+		$osm['crosstrack'] = Simplify::getCrosstrack($this->data['motion']);
 		$osm['tags'] = self::cleanTags($tags);
 		
 		$storage->putData('osm', $osm);
