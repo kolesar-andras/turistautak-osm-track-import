@@ -90,6 +90,14 @@ class Storage {
 		$this->put($out, $gzip);
 	}
 	
+	function copy ($in, $out) {
+		$dir = $this->dir();
+		$this->mkdirname($dir . $out);
+		$ret = copy($dir . $in, $dir . $out);
+		if ($ret === false)
+			throw new \Exception(sprintf('Failed to copy file %s to %s', $in, $out));
+	}
+
 	function zip ($archive, $files, $delete = false) {
 		$this->mkdirname($archive);
 		$zip = new \ZipArchive;

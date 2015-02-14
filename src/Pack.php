@@ -21,7 +21,7 @@ class Pack extends Task {
 		$data = $storage->getData('turistautak');
 		$osm = $storage->getData('osm');
 		
-		if (Options::get('merge')) {
+		if (count($data['files']) > 1 && Options::get('merge')) {
 			$files = [];
 			foreach ($data['files'] as $file) {
 				$files[] = Storage::DIR_OSM . $file['name'] . '.gpx';
@@ -35,19 +35,22 @@ class Pack extends Task {
 			$storage->gzip($filename);
 			$storage->delete($filename);
 
-		} else {
-			$filenames = [];
+		} else if (count($data['files']) > 1) {
+			$files = [];
 			foreach ($data['files'] as $file) {
-				$in = Storage::DIR_OSM . $file['name'] . '.gpx';
-				$out = Storage::DIR_UPL . $file['name'] . '.gpx.gz';
-				$files[] = $out;
-				$storage->gzip($in, $out);
+				$filename = Storage::DIR_OSM . $file['name'] . '.gpx';
+				$files[] = $filename;
 			}
 			
-			if (count($data['files']) > 1) {
-				$filename = Storage::DIR_UPL . sprintf('%d', $data['id']) . '.zip';
-				$storage->zip($filename, $files, true);
-			}
+			$filename = Storage::DIR_UPL . sprintf('%d', $data['id']) . '.zip';
+			$storage->zip($filename, $files);
+
+		} else if (count($data['files']) == 1) {
+			$file = $data['files'][0];
+			$in = Storage::DIR_OSM . $file['name'] . '.gpx';
+			$out = Storage::DIR_UPL . sprintf('%d', $data['id']) . '.gpx.gz';
+			$storage->gzip($in, $out);
+
 		}
 	}	
 }

@@ -39,13 +39,13 @@ class Upload extends Task {
 					$password = (string) $tag['value'];
 			}
 		}
-		
+
 		if (Options::get('osm-username') != '')
 			$username = Options::get('osm-username');
-			
+
 		if (Options::get('osm-password') != '')
 			$password = Options::get('osm-password');
-					
+
 		$api = Options::get('api');		
 
 	}	
