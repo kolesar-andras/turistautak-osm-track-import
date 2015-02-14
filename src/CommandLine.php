@@ -33,6 +33,10 @@ class CommandLine {
 			Option::create(null, 'osm-password', Getopt::OPTIONAL_ARGUMENT)
 				->setDescription('OSM password for upload'),
 
+			Option::create(null, 'josm', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('path for JOSM preferences')
+				->setDefaultValue('~/.josm/preferences.xml'),
+
 			Option::create(null, 'visibility', Getopt::OPTIONAL_ARGUMENT)
 				->setDescription('visibility of uploaded data [public]')
 				->setDefaultValue('public')
@@ -45,8 +49,9 @@ class CommandLine {
 					]);
 				}),
 
-			Option::create(null, 'dev', Getopt::OPTIONAL_ARGUMENT)
-				->setDescription('use OSM development API'),
+			Option::create(null, 'api', Getopt::OPTIONAL_ARGUMENT)
+				->setDescription('use OSM API url')
+				->setDefaultValue('http://api.openstreetmap.org/api/0.6'),
 
 			Option::create(null, 'proxy', Getopt::OPTIONAL_ARGUMENT)
 				->setDescription('http proxy'),
