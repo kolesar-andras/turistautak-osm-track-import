@@ -32,12 +32,26 @@ class Tag extends Task {
 		// $tags[] = sprintf('userid: %d', $this->data['owner']);
 				
 		$osm = [];
+		$osm['name'] = self::getOsmName($this->data);
 		$osm['description'] = $this->data['name'];
+		if ($this->data['description'] != '')
+			$osm['description'] .= ' | ' . $this->data['description'];
+			
 		$osm['visibility'] = Options::get('visibility');
 		$osm['crosstrack'] = Simplify::getCrosstrack($this->data['motion']);
 		$osm['tags'] = self::cleanTags($tags);
 		
 		$storage->putData('osm', $osm);
+	}
+
+	static function getOsmName ($data) {
+		return self::stripFileName($data['id'] . ' ' . $data['name']);
+	}
+	
+	static function stripFileName ($name) {
+		$name = self::deaccent($name);
+		$name = str_replace(' - ', '-', $name);
+		return $name;
 	}
 	
 	static function cleanTags ($tags) {
@@ -127,4 +141,19 @@ class Tag extends Task {
 		];
 	}
 
+	static function deaccent ($string) {
+		if (is_array($string)) {
+			foreach ($string as $k=>$v) {
+				$out[$k] = deaccent($v);
+			}
+			return $out;
+		} else {
+			return str_replace(
+				array('á', 'é', 'í', 'ó', 'ú', 'ö', 'ő', 'ü', 'ű',
+					  'Á', 'É', 'Í', 'Ó', 'Ú', 'Ö', 'Ő', 'Ü', 'Ű'),
+				array('a', 'e', 'i', 'o', 'u', 'o', 'o', 'u', 'u',
+					  'A', 'E', 'I', 'O', 'U', 'O', 'O', 'U', 'U'),
+				$string);
+		}
+	}
 }

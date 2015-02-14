@@ -26,7 +26,7 @@ class Pack extends Task {
 			foreach ($data['files'] as $file) {
 				$files[] = Storage::DIR_OSM . $file['name'] . '.gpx';
 			}
-			$filename = Storage::DIR_UPL . sprintf('%d', $data['id']) . '.gpx';
+			$filename = Storage::DIR_UPL . $osm['name'] . '.gpx';
 			Babel::process($id,
 				$files,
 				$filename
@@ -42,13 +42,13 @@ class Pack extends Task {
 				$files[] = $filename;
 			}
 			
-			$filename = Storage::DIR_UPL . sprintf('%d', $data['id']) . '.zip';
+			$filename = Storage::DIR_UPL . $osm['name'] . '.zip';
 			$storage->zip($filename, $files);
 
 		} else if (count($data['files']) == 1) {
 			$file = $data['files'][0];
 			$in = Storage::DIR_OSM . $file['name'] . '.gpx';
-			$out = Storage::DIR_UPL . sprintf('%d', $data['id']) . '.gpx.gz';
+			$out = Storage::DIR_UPL . $osm['name'] . '.gpx.gz';
 			$storage->gzip($in, $out);
 
 		}
