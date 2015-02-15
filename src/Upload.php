@@ -20,33 +20,57 @@ class Upload extends Task {
 		$storage = new Storage($id);
 		$data = $storage->getData('turistautak');
 		$osm = $storage->getData('osm');
+				
+		$api = Options::get('api');
+		if (substr($api, -1) != '/') $api .= '/';
+		$url = $api . 'gpx/create';
+
+		$auth = new Auth;
+		$post = new Post($url);
+		$post->header($auth->basicHeader());
+
+		$post->fields = [
+			'description' => $osm['description'],
+			'visibility' => $osm['visibility'],
+			'tags' => implode(', ', $osm['tags']),
+		];
 		
-		$username = null;
-		$password = null;
+		if (!isset($osm['filename']))
+			throw new \Exception('no osm filename set, run pack');
+			
+		$post->files = [
+			'file' => [
+				'filename' => $storage->dir() . $osm['filename'],
+				'content-type' => 'application/octet-stream',
+			],
+		];
+		
+		if (Options::get('proxy'))
+			$post->options = [
+				'proxy' => Options::get('proxy'),
+				'request_fulluri' => true,
+			];
 
-		if (Options::get('osm-username') == '' ||
-		    Options::get('osm-password') == '') {
+		$ret = null;
+		try {
+			$ret = $post->send();
 
-			$josm = Options::get('josm');
-			$josm = preg_replace('/^~/', $_SERVER['HOME'], $josm);
-		    $prefs = simplexml_load_file($josm);
-
-		    foreach ($prefs->tag as $tag) {
-				if ($tag['key'] == 'osm-server.username')
-					$username = (string) $tag['value'];
-
-				if ($tag['key'] == 'osm-server.password')
-					$password = (string) $tag['value'];
-			}
+		} catch (PostException $e) {
+			foreach ($e->headers as $header)
+				if (preg_match('/^Error:/iu', $header))
+					throw new \Exception($header);
 		}
 
-		if (Options::get('osm-username') != '')
-			$username = Options::get('osm-username');
-
-		if (Options::get('osm-password') != '')
-			$password = Options::get('osm-password');
-
-		$api = Options::get('api');		
-
+		if (!is_numeric($ret))
+			throw new \Exception('Could not get track id');
+			
+		$id = $ret;
+		if (Options::get('verbose'))
+			echo 'OSM track id is ' . $id, "\n";
+			
+		$osm['id'] = (int) $id;
+		$osm['url'] = sprintf('https://www.openstreetmap.org/user/%s/traces/%s', urlencode($auth->username), $id);
+		$osm['dateuploaded'] = date('Y-m-d H:i:s');
+		$storage->putData('osm', $osm);
 	}	
 }

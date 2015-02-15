@@ -50,7 +50,10 @@ class Pack extends Task {
 			$in = Storage::DIR_OSM . $file['name'] . '.gpx';
 			$out = Storage::DIR_UPL . $osm['name'] . '.gpx.gz';
 			$storage->gzip($in, $out);
-
+			$filename = $out;
 		}
+
+		$osm['filename'] = $filename;
+		$storage->putData('osm', $osm);
 	}	
 }

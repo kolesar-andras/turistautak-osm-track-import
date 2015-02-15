@@ -13,6 +13,8 @@
 
 class Tag extends Task {
 
+	const OSM_DESCRIPTION_LIMIT = 255;
+
 	var $data;
 
 	function process ($id) {
@@ -36,6 +38,10 @@ class Tag extends Task {
 		$osm['description'] = $this->data['name'];
 		if ($this->data['description'] != '')
 			$osm['description'] .= ' | ' . $this->data['description'];
+		
+		// az osm korlátozza a leírás hosszát
+		if (mb_strlen($osm['description']) > self::OSM_DESCRIPTION_LIMIT)
+			$osm['description'] = mb_substr($osm['description'], 0, self::OSM_DESCRIPTION_LIMIT-3) . '...';
 			
 		$osm['visibility'] = Options::get('visibility');
 		$osm['crosstrack'] = Simplify::getCrosstrack($this->data['motion']);
