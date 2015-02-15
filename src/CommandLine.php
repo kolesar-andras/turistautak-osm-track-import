@@ -77,6 +77,9 @@ class CommandLine {
 			Option::create('d', 'debug', Getopt::NO_ARGUMENT)
 				->setDescription('debug output'),
 
+			Option::create('p', 'progress', Getopt::NO_ARGUMENT)
+				->setDescription('debug output'),
+
 			Option::create('h', 'help')
 				->setDescription('this help'),
 		));

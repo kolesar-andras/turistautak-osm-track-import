@@ -71,6 +71,10 @@ class TaskManager {
 		} else {
 			$todo = array($ids);
 		}
+		$prgressBar = null;
+		if (Options::get('progress'))
+			$progressBar = new \ProgressBar\Manager(0, count($ids));
+			
 		foreach ($todo as $ids) {
 			foreach ($allTasks as $task) {
 				if (in_array($task, $tasks)) {
@@ -81,6 +85,8 @@ class TaskManager {
 					$taskObject->processIds($ids);
 				}
 			}
+			if ($progressBar) $progressBar->advance();
+ 
 		}
 	}
 }

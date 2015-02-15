@@ -53,6 +53,7 @@ class Storage {
 	
 	function rmdir ($dir) {
 		$dir = $this->dir() . $dir;
+		if (!is_dir($dir)) return;
 		$files = array_diff(scandir($dir), array('.','..'));
 		foreach ($files as $file) unlink("$dir/$file");
 	    return rmdir($dir);

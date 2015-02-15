@@ -8,8 +8,10 @@
             "email": "kolesar@turistautak.hu"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
-        "ulrichsg/getopt-php": "~2.2"
+        "ulrichsg/getopt-php": "~2.2",
+        "guiguiboy/php-cli-progress-bar": "*"
     },
 	"autoload": {
 		"psr-4": {"KolesarAndras\\TuristautakOsmTrackImport\\": "src"}
