@@ -73,6 +73,6 @@ class Upload extends Task {
 		$storage->putData('osm', $osm);
 		if (!Options::get('keep-upload') &&
 			!Options::get('keep-all'))
-			$storage->rmdir(Storage::DIR_UPLOAD);
+			$storage->rmdir(Storage::DIR_UPL);
 	}	
 }

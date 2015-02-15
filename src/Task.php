@@ -18,8 +18,9 @@ class Task {
 			return $this->processWithLog($ids);
 		} else {
 			foreach ($ids as $id) {
-				return $this->processWithLog($id);
+				$ret = $this->processWithLog($id);
 			}
+			return $ret;
 		}
 	}
 
@@ -31,7 +32,7 @@ class Task {
 			$task = array_pop($explode);
 			$message = sprintf("[%s %d] %s\n",
 				$task, $id, $e->getMessage());
-			file_put_contents('error.log', $message, FILE_APPEND);
+			file_put_contents('php://stderr', $message);
 		}
 	}	
 }
