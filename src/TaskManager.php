@@ -12,6 +12,8 @@
  */
  
 class TaskManager {
+	
+	const INVERT = 'do-not-';
 
 	function process () {
 		$defaultTasks = array(
@@ -39,12 +41,26 @@ class TaskManager {
 		}
 
 		// megnézzük, nincs-e köztük olyan, amit nem ismerünk
+		$inverted = false;
 		foreach ($tasks as $task) {
+			if (substr($task, 0, strlen(self::INVERT)) == self::INVERT) {
+				$task = substr($task, strlen(self::INVERT));
+				$inverted = true;
+			}
 			if (!in_array($task, $allTasks)) {
 				throw new \Exception(sprintf('Unknown task %s', $task));
 			}
 		}
 		
+		// azt adta meg, amit nem szeretne végrehajtani
+		if ($inverted) {
+			$out = [];
+			foreach ($defaultTasks as $task)
+				if (!in_array(self::INVERT . $task, $tasks)) 
+					$out[] = $task;	
+			$tasks = $out;
+		}
+
 		// lekérdezzük az azonosítókat
 		$query = new Query;
 		$ids = $query->process();

@@ -21,9 +21,15 @@ class Pack extends Task {
 		$data = $storage->getData('turistautak');
 		$osm = $storage->getData('osm');
 		
-		if (count($data['files']) > 1 && Options::get('merge')) {
+		$todo = [];
+		foreach ($data['files'] as $file) {
+			if (isset($file['skip'])) continue;
+			$todo[] = $file;
+		}
+		
+		if (count($todo) > 1 && Options::get('merge')) {
 			$files = [];
-			foreach ($data['files'] as $file) {
+			foreach ($todo as $file) {
 				$files[] = Storage::DIR_OSM . $file['name'] . '.gpx';
 			}
 			$filename = Storage::DIR_UPL . $osm['name'] . '.gpx';
@@ -35,9 +41,9 @@ class Pack extends Task {
 			$storage->gzip($filename);
 			$storage->delete($filename);
 
-		} else if (count($data['files']) > 1) {
+		} else if (count($todo) > 1) {
 			$files = [];
-			foreach ($data['files'] as $file) {
+			foreach ($todo as $file) {
 				$filename = Storage::DIR_OSM . $file['name'] . '.gpx';
 				$files[] = $filename;
 			}
@@ -45,13 +51,14 @@ class Pack extends Task {
 			$filename = Storage::DIR_UPL . $osm['name'] . '.zip';
 			$storage->zip($filename, $files);
 
-		} else if (count($data['files']) == 1) {
-			$file = $data['files'][0];
+		} else if (count($todo) == 1) {
+			$file = $todo[0];
 			$in = Storage::DIR_OSM . $file['name'] . '.gpx';
 			$out = Storage::DIR_UPL . $osm['name'] . '.gpx.gz';
 			$storage->gzip($in, $out);
 			$filename = $out;
-		}
+
+		} else return; // nincsenek fájljai
 
 		$osm['filename'] = $filename;
 		$storage->putData('osm', $osm);

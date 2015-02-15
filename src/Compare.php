@@ -26,7 +26,8 @@ class Compare extends Task {
 
 		$storage = new Storage($id);
 		$data = $storage->getData('turistautak');
-		foreach ($data['files'] as $file) {
+		foreach ($data['files'] as $index => $file) {
+			if (isset($file['skip'])) continue;
 			// egyszerűsítjük a nyomvonalat, hogy lehetőleg olyan pontot vizsgáljunk,
 			// amit nem szűrtek ki hasonló módszerrel a feltöltés előtt
 			// egyúttal kisebb xml-t kell végignéznünk
@@ -103,10 +104,9 @@ class Compare extends Task {
 						$osmid = $regs[1];
 					
 						$match = array(
-							'point' => $point,
-							'trkpt' => $trkpt,
-							'trkseg' => $trkseg,
-							'trk' => $trk,
+							'name' => (string) $trk->name,
+							'desc' => (string) $trk->desc,
+							'url' => (string) $trk->url,
 						);
 					
 						$matches[$osmid] = $match;
@@ -123,7 +123,13 @@ class Compare extends Task {
 			$warning = '';
 			if (count($matches)>1) $warning = sprintf(', duplicates on OSM: %s', implode(', ', array_keys($matches)));
 			if (Options::get('verbose')) echo sprintf('%d same from %d points%s [%s]', $same, $count, $warning, $file['name']), "\n";
+			if ($same) {
+				$data['files'][$index]['skip'] = 'already uploaded';
+				$data['files'][$index]['matches'] = $matches;
+			}
+
 		}
+		$storage->putData('turistautak', $data);
 	}
 	
 	function samePoint ($point1, $point2) {

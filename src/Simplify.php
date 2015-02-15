@@ -26,6 +26,7 @@ class Simplify extends Task {
 		$osm = $storage->getData('osm');
 		$filter = self::filter($osm['crosstrack']);
 		foreach ($data['files'] as $file) {
+			if (isset($file['skip'])) continue;
 			Babel::process($id,
 				Storage::DIR_GPX . $file['name'] . '.gpx',
 				Storage::DIR_OSM . $file['name'] . '.gpx',
