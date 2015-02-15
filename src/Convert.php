@@ -19,6 +19,7 @@ class Convert extends Task {
 
 		$storage = new Storage($id);
 		$data = $storage->getData('turistautak');
+		$storage->rmdir(Storage::DIR_GPX);
 		foreach ($data['files'] as $file) {
 			if (isset($file['skip'])) continue;
 			Babel::process($id,

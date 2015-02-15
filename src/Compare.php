@@ -25,6 +25,7 @@ class Compare extends Task {
 			echo sprintf('Comparing track id=%d', $id), "\n";
 
 		$storage = new Storage($id);
+		$storage->rmdir(Storage::DIR_CMP);
 		$data = $storage->getData('turistautak');
 		foreach ($data['files'] as $index => $file) {
 			if (isset($file['skip'])) continue;

@@ -51,6 +51,13 @@ class Storage {
 			throw new \Exception(sprintf('Failed to delete file: %s', $path));
 	}
 	
+	function rmdir ($dir) {
+		$dir = $this->dir() . $dir;
+		$files = array_diff(scandir($dir), array('.','..'));
+		foreach ($files as $file) unlink("$dir/$file");
+	    return rmdir($dir);
+	}
+
 	function touch ($filename, $timestamp) {
 		$dir = $this->dir();
 		$path = $dir . $filename;

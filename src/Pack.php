@@ -18,6 +18,7 @@ class Pack extends Task {
 			echo sprintf('Packing track id=%d', $id), "\n";
 
 		$storage = new Storage($id);
+		$storage->rmdir(Storage::DIR_UPL);
 		$data = $storage->getData('turistautak');
 		$osm = $storage->getData('osm');
 		
@@ -40,6 +41,7 @@ class Pack extends Task {
 			
 			$storage->gzip($filename);
 			$storage->delete($filename);
+			$filename = $filename . '.gz';
 
 		} else if (count($todo) > 1) {
 			$files = [];

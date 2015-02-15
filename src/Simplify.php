@@ -22,6 +22,7 @@ class Simplify extends Task {
 			echo sprintf('Simplifying track id=%d', $id), "\n";
 
 		$storage = new Storage($id);
+		$storage->rmdir(Storage::DIR_OSM);
 		$data = $storage->getData('turistautak');
 		$osm = $storage->getData('osm');
 		$filter = self::filter($osm['crosstrack']);
