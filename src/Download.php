@@ -21,7 +21,18 @@ class Download extends Task {
 		$data = Query::fetchData($url);
 		$storage = new Storage($id);
 		$storage->putData('turistautak', $data);
-		
+
+		if (!Options::get('do-not-merge-regions')) {
+			if ($data['parent']) return false;
+			if (is_array($data['children'])) {
+				foreach ($data['children'] as $child) {
+					$url = sprintf('http://turistautak.hu/tracks.php?id=%d&json', $child);
+					$childdata = Query::fetchData($url);
+					$data['files'] = array_merge($data['files'], $childdata['files']);
+				}
+			}
+		}
+
 		if (is_array($data['files'])) foreach ($data['files'] as $file) {
 			if (!Format::isTrackFile($file['name'])) continue;
 
@@ -35,5 +46,8 @@ class Download extends Task {
 			$storage->put(Storage::DIR_SRC . $file['name'], $contents);
 			$storage->touch(Storage::DIR_SRC . $file['name'], strtotime($file['date']));
 		}
+
+		$storage->putData('turistautak', $data);
+
 	}
 }

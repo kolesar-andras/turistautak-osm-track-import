@@ -62,7 +62,7 @@ class CommandLine {
 			Option::create(null, 'merge-all', Getopt::NO_ARGUMENT)
 				->setDescription('merge all processed files into a single gpx file'),
 
-			Option::create(null, 'merge-regions', Getopt::NO_ARGUMENT)
+			Option::create(null, 'do-not-merge-regions', Getopt::NO_ARGUMENT)
 				->setDescription('find and merge parts from all regions'),
 
 			Option::create(null, 'crosstrack', Getopt::OPTIONAL_ARGUMENT)
