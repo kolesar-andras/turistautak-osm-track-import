@@ -20,6 +20,8 @@ class Upload extends Task {
 		$storage = new Storage($id);
 		$data = $storage->getData('turistautak');
 		$osm = $storage->getData('osm');
+
+		if (!isset($osm['filename'])) return;
 				
 		$api = Options::get('api');
 		if (substr($api, -1) != '/') $api .= '/';
@@ -34,10 +36,7 @@ class Upload extends Task {
 			'visibility' => $osm['visibility'],
 			'tags' => implode(', ', $osm['tags']),
 		];
-		
-		if (!isset($osm['filename']))
-			throw new \Exception('no osm filename set, run pack');
-			
+				
 		$post->files = [
 			'file' => [
 				'filename' => $storage->dir() . $osm['filename'],

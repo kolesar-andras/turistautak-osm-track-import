@@ -66,12 +66,12 @@ class TaskManager {
 		$ids = $query->process();
 
 		// kifejezetten csak értelmes sorrendben vagyunk hajlandóak végrehajtani
-		if (Options::get('one-by-one')) {
+		if (!Options::get('by-tasks')) {
 			$todo = $ids;
 		} else {
 			$todo = array($ids);
 		}
-		$prgressBar = null;
+		$progressBar = null;
 		if (Options::get('progress'))
 			$progressBar = new \ProgressBar\Manager(0, count($ids));
 			
@@ -82,11 +82,11 @@ class TaskManager {
 					if (!class_exists($className))
 						throw new \Exception(sprintf('Not implemented: %s', $task));
 					$taskObject = new $className;
-					$taskObject->processIds($ids);
+					$ret = $taskObject->processIds($ids);
+					if ($ret === false) break;
 				}
 			}
 			if ($progressBar) $progressBar->advance();
- 
 		}
 	}
 }

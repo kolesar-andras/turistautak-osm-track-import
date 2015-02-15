@@ -19,10 +19,10 @@ class Download extends Task {
 
 		$url = sprintf('http://turistautak.hu/tracks.php?id=%d&json', $id);
 		$data = Query::fetchData($url);
-		$storage = new Storage($id);
-		$storage->putData('turistautak', $data);
+		$storage = new Storage($id, true);
 
 		if (!Options::get('do-not-merge-regions')) {
+			if ($data['parent']) return false;
 			if (is_array($data['children'])) {
 				foreach ($data['children'] as $child) {
 					$url = sprintf('http://turistautak.hu/tracks.php?id=%d&json', $child);
@@ -40,11 +40,6 @@ class Download extends Task {
 			throw new \Exception('Invalid file list.');
 			
 		foreach ($data['files'] as $index => $file) {
-			if (!Options::get('do-not-merge-regions') && $data['parent']) {
-				$data['files'][$index]['skip'] = 'parent';
-				continue;
-			}
-
 			if (!Format::isTrackFile($file['name'])) {
 				$data['files'][$index]['skip'] = 'unhandled file extension';
 				continue;
@@ -52,7 +47,7 @@ class Download extends Task {
 
 			$contents = Query::fetchUrl($file['url']);
 			if ($contents === false)
-			throw new \Exception(sprintf('Failed to get file for track id=%d: ', $id, $file['name']));
+			throw new \Exception(sprintf('Failed to get file for track id=%d: %s', $id, $file['name']));
 			
 			if (md5($contents) != $file['md5'])
 				throw new \Exception('md5 error: ' . $file['name']);

@@ -21,8 +21,10 @@ class Storage {
 	const DIR_OSM = 'osm/';
 	const DIR_UPL = 'upload/';
 
-	function __construct ($id) {
+	function __construct ($id, $create = false) {
 		$this->id = $id;
+		if (!$create && !is_dir($this->dir()))
+			throw new StorageNotFoundException('storage not found');
 	}
 
 	function dir () {
@@ -118,4 +120,7 @@ class Storage {
 		$zip->close();
 	}
 	
+}
+
+class StorageNotFoundException extends \Exception {
 }

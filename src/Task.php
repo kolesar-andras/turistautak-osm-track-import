@@ -15,10 +15,14 @@ class Task {
 
 	function processIds ($ids) {
 		if (!is_array($ids)) {
-			$this->process($ids);
+			return $this->process($ids);
 		} else {
 			foreach ($ids as $id) {
-				$this->process($id);
+				try {
+					$this->process($id);
+				} catch (StorageNotFoundException $e) {
+					// nem baj, csak nincs ilyen könyvtár, átugorjuk
+				}
 			}
 		}
 	}

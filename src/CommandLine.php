@@ -68,8 +68,8 @@ class CommandLine {
 			Option::create(null, 'crosstrack', Getopt::OPTIONAL_ARGUMENT)
 				->setDescription('set threshold for gpsbabel simplify crosstrack'),
 
-			Option::create('1', 'one-by-one', Getopt::NO_ARGUMENT)
-				->setDescription('process tracks one by one'),
+			Option::create(null, 'by-tasks', Getopt::NO_ARGUMENT)
+				->setDescription('process by tasks'),
 
 			Option::create('v', 'verbose', Getopt::NO_ARGUMENT)
 				->setDescription('verbose output'),
