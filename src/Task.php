@@ -15,16 +15,23 @@ class Task {
 
 	function processIds ($ids) {
 		if (!is_array($ids)) {
-			return $this->process($ids);
+			return $this->processWithLog($ids);
 		} else {
 			foreach ($ids as $id) {
-				try {
-					$this->process($id);
-				} catch (StorageNotFoundException $e) {
-					// nem baj, csak nincs ilyen könyvtár, átugorjuk
-				}
+				return $this->processWithLog($id);
 			}
 		}
 	}
-	
+
+	function processWithLog ($id) {
+		try {
+			return $this->process($id);
+		} catch (\Exception $e) {
+			$explode = explode('\\', get_class($this));
+			$task = array_pop($explode);
+			$message = sprintf("[%s %d] %s\n",
+				$task, $id, $e->getMessage());
+			file_put_contents('error.log', $message, FILE_APPEND);
+		}
+	}	
 }
