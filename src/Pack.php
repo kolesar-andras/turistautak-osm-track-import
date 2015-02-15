@@ -64,5 +64,8 @@ class Pack extends Task {
 
 		$osm['filename'] = $filename;
 		$storage->putData('osm', $osm);
+		if (!Options::get('keep-osm') &&
+			!Options::get('keep-all'))
+			$storage->rmdir(Storage::DIR_OSM);
 	}	
 }

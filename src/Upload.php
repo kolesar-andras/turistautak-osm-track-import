@@ -71,5 +71,8 @@ class Upload extends Task {
 		$osm['url'] = sprintf('https://www.openstreetmap.org/user/%s/traces/%s', urlencode($auth->username), $id);
 		$osm['dateuploaded'] = date('Y-m-d H:i:s');
 		$storage->putData('osm', $osm);
+		if (!Options::get('keep-upload') &&
+			!Options::get('keep-all'))
+			$storage->rmdir(Storage::DIR_UPLOAD);
 	}	
 }

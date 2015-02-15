@@ -34,6 +34,9 @@ class Simplify extends Task {
 				$filter
 			);
 		}
+		if (!Options::get('keep-gpx') &&
+			!Options::get('keep-all'))
+			$storage->rmdir(Storage::DIR_GPX);
 	}
 	
 	static function getCrosstrack ($motion) {

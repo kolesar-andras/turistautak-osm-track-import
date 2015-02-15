@@ -71,6 +71,24 @@ class CommandLine {
 			Option::create(null, 'by-tasks', Getopt::NO_ARGUMENT)
 				->setDescription('process by tasks'),
 
+			Option::create(null, 'keep-turistautak', Getopt::NO_ARGUMENT)
+				->setDescription('keep turistautak directory'),
+
+			Option::create(null, 'keep-convert', Getopt::NO_ARGUMENT)
+				->setDescription('keep convert directory'),
+
+			Option::create(null, 'keep-compare', Getopt::NO_ARGUMENT)
+				->setDescription('keep compare directory'),
+
+			Option::create(null, 'keep-osm', Getopt::NO_ARGUMENT)
+				->setDescription('keep osm directory'),
+
+			Option::create(null, 'keep-upload', Getopt::NO_ARGUMENT)
+				->setDescription('keep upload directory'),
+
+			Option::create(null, 'keep-all', Getopt::NO_ARGUMENT)
+				->setDescription('keep all directores'),
+
 			Option::create('v', 'verbose', Getopt::NO_ARGUMENT)
 				->setDescription('verbose output'),
 

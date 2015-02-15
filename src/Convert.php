@@ -27,5 +27,9 @@ class Convert extends Task {
 				Storage::DIR_GPX . $file['name'] . '.gpx'
 			);
 		}
+		if (!Options::get('keep-turistautak') &&
+			!Options::get('keep-all'))
+			$storage->rmdir(Storage::DIR_SRC);
+		
 	}
 }

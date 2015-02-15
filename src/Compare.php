@@ -134,6 +134,9 @@ class Compare extends Task {
 
 		}
 		$storage->putData('turistautak', $data);
+		if (!Options::get('keep-compare') &&
+			!Options::get('keep-all'))
+			$storage->rmdir(Storage::DIR_CMP);
 	}
 	
 	function samePoint ($point1, $point2) {
