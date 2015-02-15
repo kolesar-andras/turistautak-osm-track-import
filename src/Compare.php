@@ -117,7 +117,10 @@ class Compare extends Task {
 				$count++;
 				if (count($matches)) break;
 				if (Options::get('debug')) {
-					echo sprintf('Missing point %1.7f %1.7f %s', $point['lat'], $point['lon'], $point->time), "\n";
+					echo sprintf('Missing point %s %s %s',
+						self::osmDigits($point['lat']),
+						self::osmDigits($point['lon']),
+						$point->time), "\n";
 				}		
 			}
 			$warning = '';
@@ -142,13 +145,15 @@ class Compare extends Task {
 		return (string) $point1->time == (string) $point2->time;
 	}
 
+	function sameDigits ($coord1, $coord2) {
+		$limit = 1/pow(10, self::OSMDIGITS);
+		return abs((float) $coord1 - (float)$coord2) <= $limit;
+	}			
+				
 	function samePosition ($point1, $point2) {
-		return (
-			self::osmDigits($point1['lat']) == 
-			self::osmDigits($point2['lat']) &&
-			self::osmDigits($point1['lon']) == 
-			self::osmDigits($point2['lon'])
-		);
+		return
+			self::sameDigits($point1['lat'], $point2['lat']) &&
+			self::sameDigits($point1['lon'], $point2['lon']);
 	}
 
 	static function osmDigits ($coord) {
