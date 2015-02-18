@@ -34,8 +34,8 @@ class Format {
 			case 'gdb': return 'gdb';
 			case 'mps': return 'mapsource';
 			case 'gpx': return 'gpx';
-			case 'wpt':	return 'oziexplorer';
-			case 'plt':	return 'oziexplorer';
+			case 'wpt':	return 'ozi';
+			case 'plt':	return 'ozi';
 
 			case 'mp':
 			case 'jpg':
